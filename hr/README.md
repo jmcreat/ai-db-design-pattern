@@ -1,5 +1,12 @@
 # 인사 관리 시스템 (HR System)
 
+## 📦 데이터베이스 버전
+
+이 스키마는 **MySQL**과 **PostgreSQL 16** 두 가지 버전으로 제공됩니다:
+
+- **`schema.sql`** - MySQL 8.0+ 버전
+- **`schema_postgres.sql`** - PostgreSQL 16 버전
+
 ## 📊 핵심 개념
 
 ```

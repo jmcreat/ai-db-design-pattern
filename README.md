@@ -17,7 +17,16 @@ ai-db-design-pattern/
 │   ├── README.md
 │   ├── ERD.md
 │   ├── ERD.mmd                 (자동 생성)
-│   ├── schema.sql
+│   ├── schema.sql              (MySQL)
+│   ├── schema_postgres.sql     (PostgreSQL 16)
+│   └── sample_queries.sql
+│
+├── hr/                         (인사 관리)
+│   ├── README.md
+│   ├── ERD.md
+│   ├── ERD.mmd                 (자동 생성)
+│   ├── schema.sql              (MySQL)
+│   ├── schema_postgres.sql     (PostgreSQL 16)
 │   └── sample_queries.sql
 │
 ├── ecommerce/                  (전자상거래)
@@ -29,6 +38,14 @@ ai-db-design-pattern/
 └── healthcare/                 (의료 시스템)
     └── ...
 ```
+
+## 🗄️ 지원 데이터베이스
+
+각 도메인은 다음 데이터베이스를 지원합니다:
+
+- **MySQL 8.0+** (`schema.sql`)
+- **PostgreSQL 16** (`schema_postgres.sql`)
+  - PostGIS 확장 지원 (지리 데이터 필요 시)
 
 ---
 
