@@ -1,0 +1,162 @@
+erDiagram
+    departments {
+        bigint id PK
+        varchar department_code UK "부서코드"
+        varchar department_name "부서명"
+        bigint parent_id FK "상위 부서"
+        bigint manager_id "부서장 직원 ID"
+        varchar status "상태 (active, inactive)"
+        date established_date "설립일"
+        date closed_date "폐쇄일"
+        timestamp created_at
+        varchar created_by
+        timestamp updated_at
+        varchar updated_by
+        timestamp deleted_at "Soft Delete"
+    }
+
+    positions {
+        bigint id PK
+        varchar position_code UK "직급코드"
+        varchar position_name "직급명"
+        int level "직급 레벨 (1=사원, 2=대리, ...)"
+        decimal min_salary "최소 급여"
+        decimal max_salary "최대 급여"
+        text description "직급 설명"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    employees {
+        bigint id PK
+        varchar employee_number UK "사번"
+        varchar name "이름"
+        varchar name_en "영문명"
+        date birth_date "생년월일"
+        varchar gender "성별"
+        varchar email "이메일"
+        varchar phone "전화번호"
+        varchar mobile "휴대폰"
+        text address "주소"
+        varchar postal_code "우편번호"
+        varchar ssn_encrypted "주민번호 (암호화)"
+        varchar bank_account_encrypted "계좌번호 (암호화)"
+        bigint current_position_id FK "현재 직급"
+        date hire_date "입사일"
+        date resignation_date "퇴사일"
+        varchar employment_type "고용형태 (full_time, contract, part_time)"
+        varchar status "재직상태 (active, on_leave, resigned)"
+        timestamp created_at
+        varchar created_by
+        timestamp updated_at
+        varchar updated_by
+        timestamp deleted_at "Soft Delete (퇴사자 보존)"
+    }
+
+    employee_departments {
+        bigint id PK
+        bigint employee_id FK
+        bigint department_id FK
+        date assignment_date "발령일"
+        date release_date "해제일"
+        boolean is_primary "주부서 여부"
+        varchar role "역할 (member, manager, deputy)"
+        text reason "발령 사유"
+        timestamp created_at
+        varchar created_by
+    }
+
+    salaries {
+        bigint id PK
+        bigint employee_id FK
+        decimal base_salary "기본급"
+        decimal allowances "수당"
+        decimal bonus "상여금"
+        decimal total_salary "총 급여"
+        date effective_from "적용 시작일"
+        date effective_to "적용 종료일"
+        varchar change_reason "변경 사유"
+        timestamp created_at
+        varchar created_by
+    }
+
+    attendance {
+        bigint id PK
+        bigint employee_id FK
+        date work_date "근무일"
+        int work_minutes
+        varchar status "상태 (normal, late, early_leave, absent, holiday)"
+        text notes "비고"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    leaves {
+        bigint id PK
+        bigint employee_id FK
+        varchar leave_type "휴가 유형 (annual, sick, special, unpaid)"
+        date start_date "시작일"
+        date end_date "종료일"
+        decimal days "일수 (반차 0.5)"
+        text reason "사유"
+        varchar status "상태 (pending, approved, rejected, cancelled)"
+        bigint approver_id FK "승인자"
+        timestamp approved_at "승인 일시"
+        timestamp created_at
+        varchar created_by
+        timestamp updated_at
+    }
+
+    performance_reviews {
+        bigint id PK
+        bigint employee_id FK
+        varchar review_period "평가 기간 (2024-Q1, 2024-H1)"
+        int review_year "평가 연도"
+        decimal score "종합 점수"
+        varchar grade "등급 (S, A, B, C, D)"
+        bigint reviewer_id FK "평가자"
+        text strengths "강점"
+        text weaknesses "약점"
+        text goals "목표"
+        text comments "종합 의견"
+        date reviewed_at "평가일"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    employee_documents {
+        bigint id PK
+        bigint employee_id FK
+        varchar document_type "문서 유형 (contract, certificate, resume)"
+        varchar document_name "문서명"
+        varchar file_path "파일 경로"
+        bigint file_size "파일 크기 (bytes)"
+        timestamp uploaded_at
+        varchar uploaded_by
+        boolean is_confidential "기밀 문서 여부"
+    }
+
+    audit_logs {
+        bigint id PK
+        varchar table_name "테이블명"
+        bigint record_id "레코드 ID"
+        varchar action "액션 (INSERT, UPDATE, DELETE)"
+        text old_data "변경 전 데이터"
+        text new_data "변경 후 데이터"
+        varchar user_id "사용자 ID"
+        varchar ip_address "IP 주소"
+        timestamp occurred_at
+    }
+
+    %% Relationships
+    departments ||--o{ departments : "parent_id"
+    employees ||--o{ leaves : "approver_id"
+    employees ||--o{ performance_reviews : "employee_id"
+    departments ||--o{ employee_departments : "department_id"
+    employees ||--o{ salaries : "employee_id"
+    employees ||--o{ leaves : "employee_id"
+    employees ||--o{ performance_reviews : "reviewer_id"
+    employees ||--o{ employee_departments : "employee_id"
+    positions ||--o{ employees : "current_position_id"
+    employees ||--o{ attendance : "employee_id"
+    employees ||--o{ employee_documents : "employee_id"
